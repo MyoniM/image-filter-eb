@@ -28,6 +28,25 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
 
   /**************************************************************************** */
 
+  app.get('/filteredimage', async (req, res) => {
+    const image_url = req.query.image_url;
+
+    // check if user sent a valid image_url
+    if (!image_url) {
+      return res.status(422).send('image_url is required!');
+    }
+    try {
+      // filter and save image locally
+      const filteredImgPath = await filterImageFromURL(image_url);
+
+      // respond with saved img and delete img from server upon completion
+      res.sendFile(filteredImgPath, () => {
+        deleteLocalFiles([filteredImgPath]);
+      });
+    } catch (_) {
+      res.status(400).send('Invalid image_url, make sure the image exists and is accessible!');
+    }
+  });
   //! END @TODO1
 
   // Root Endpoint
