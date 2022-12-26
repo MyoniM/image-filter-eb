@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import { filterImageFromURL, deleteLocalFiles } from './util/util';
 
@@ -28,8 +28,8 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
 
   /**************************************************************************** */
 
-  app.get('/filteredimage', async (req, res) => {
-    const image_url = req.query.image_url;
+  app.get('/filteredimage', async (req: Request, res: Response) => {
+    const image_url: string = req.query.image_url;
 
     // check if user sent a valid image_url
     if (!image_url) {
@@ -44,7 +44,7 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
         deleteLocalFiles([filteredImgPath]);
       });
     } catch (_) {
-      res.status(400).send('Invalid image_url, make sure the image exists and is accessible!');
+      res.status(500).send('Server error');
     }
   });
   //! END @TODO1
